@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SatyaMatrix</title>
+    <link rel="stylesheet" href="{% static 'css/auth-split.css' %}">
+</head>
+<body>
+    <!-- Back Button -->
+    <a href="{% url 'home' %}" class="back-button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+    </a>
+    
+    <div class="auth-split-container">
+        <!-- Left Side - Video -->
+        <div class="auth-right">
+            <img src="{% static 'assects/icons/logo.svg' %}" alt="SatyaMatrix Logo" class="video-logo">
+            <video class="auth-video" autoplay muted loop playsinline>
+                <source src="{% static 'assects/videos/Aurora.mp4' %}" type="video/mp4">
+            </video>
+            <div class="video-overlay"></div>
+            <div class="video-text">
+                <h2>Be a Part of<br>Something <span class="highlight">Beautiful</span></h2>
+            </div>
+        </div>
+
+        <!-- Right Side - Form -->
+        <div class="auth-left">
+            <div class="auth-content">
+                <div class="auth-header">
+                    <!-- <img src="{% static 'assects/icons/satyamatrix.svg' %}" alt="SatyaMatrix" class="auth-logo"> -->
+                    <h1>Welcome Back</h1>
+                    <p>You are a step away from something great!</p>
+                </div>
+
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="POST" class="auth-form">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="user@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="placeholder" required>
+                    </div>
+
+                    <button type="submit" class="auth-button">Log In</button>
+                </form>
+
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

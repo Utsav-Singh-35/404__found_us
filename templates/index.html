@@ -1,0 +1,230 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SatyaMatrix</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="{% static 'assects/icons/satyamatrix.svg' %}" alt="SatyaMatrix Logo">
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'signup' %}" class="signup-btn">Sign Up</a></li>
+                {% endif %}
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="{% static 'assects/videos/hero-background.mp4' %}" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-logo">
+                <img src="{% static 'assects/icons/logo.svg' %}" alt="SatyaMatrix Icon" class="hero-icon">
+                <h1>SatyaMatrix</h1>
+            </div>
+            <h2 class="hero-subtitle">AI-Powered Fact-Checking & OCR Assistant</h2>
+            <p class="hero-description">Extract truth from images and text in seconds.</p>
+            
+            <div class="hero-features">
+                <div class="hero-feature-badge">
+                    <i data-lucide="shield" class="badge-icon"></i>
+                    <span>Private by default</span>
+                </div>
+                <div class="hero-feature-badge">
+                    <i data-lucide="zap" class="badge-icon"></i>
+                    <span>Fast OCR</span>
+                </div>
+                <div class="hero-feature-badge">
+                    <i data-lucide="globe" class="badge-icon"></i>
+                    <span>English / Hindi</span>
+                </div>
+            </div>
+            
+            <div class="hero-buttons">
+                <button class="cta-button primary">
+                    Get Started
+                    <i data-lucide="arrow-right" class="button-icon"></i>
+                </button>
+                <button class="cta-button secondary">Learn More</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-features" id="about">
+        <div class="about-container">
+            <h2>About</h2>
+            <p class="mission-statement">In an era where misinformation spreads faster than facts, SatyaMatrix stands as
+                your digital truth guardian. Our advanced AI combines cutting-edge OCR technology with real-time
+                fact-checking to deliver instant, reliable verification of any claim, image, or news article.</p>
+
+            <div class="features-grid">
+                <div class="feature-card card-1">
+                    <h3>AI-Powered OCR</h3>
+                    <p>Extract and enhance text from images with multi-language precision.</p>
+                </div>
+
+                <div class="feature-card card-2">
+                    <h3>Smart Fact Verification</h3>
+                    <p>Instantly verify claims using trusted fact-check APIs and AI.</p>
+                </div>
+                <div class="feature-card card-6">
+
+                    <h3>Multi-Language Support</h3>
+                    <p>Understand and process 15+ global languages intelligently.</p>
+                </div>
+                <div class="feature-card card-4">
+                    <i data-lucide="cpu" class="feature-icon"></i>
+                    <h4 class="feature-subtitle">AI Core Engine</h4>
+                </div>
+                <div class="feature-card card-3">
+                    <img src="{% static 'assects/icons/logo.svg' %}" alt="SatyaMatrix Logo" class="feature-logo">
+                </div>
+
+                <div class="feature-card card-5">
+                    <i data-lucide="shield-check" class="feature-icon"></i>
+                    <h4 class="feature-subtitle">Trust & Security</h4>
+                </div>
+
+
+
+                <div class="feature-card card-7">
+                    <h3>Source Intelligence</h3>
+                    <p>Auto-validate sources and filter outdated or unreliable content.</p>
+                </div>
+
+                <div class="feature-card card-8">
+                    <h3>Community Dashboard</h3>
+                    <p>Save results, share reports, and collaborate on verified data.</p>
+                </div>
+
+                <div class="feature-card card-9">
+                    <h3>Lightning Fast</h3>
+                    <p>Get full analysis results in under 3 seconds.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <div class="contact-container">
+            <div class="contact-left">
+                <div class="company-logo">
+                    <img src="{% static 'assects/icons/satyamatrix.svg' %}" alt="SatyaMatrix">
+                    <h2>“The Network of Truth.”</h2>
+                </div>
+                <span class="detail-value">Developed by:</span>
+
+                <div class="parent">
+                    <div class="div1">
+                        Utsav Singh
+                        <a href="https://github.com/Utsav-Singh-35" target="_blank" class="github-link">
+                            <span>↗</span>
+                        </a>
+                    </div>
+                    <div class="div2">
+                        Om Singh
+                        <a href="https://github.com/Jayom5797" target="_blank" class="github-link">
+                            <span>↗</span>
+                        </a>
+                    </div>
+                    <div class="div3">
+                        Vikas Tiwari
+                        <a href="https://github.com/Cyberexe1" target="_blank" class="github-link">
+                            <span>↗</span>
+                        </a>
+                    </div>
+                    <div class="div4">
+                        Ankit Sharma
+                        <a href="https://github.com/sharmaankit29" target="_blank" class="github-link">
+                            <span>↗</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="contact-right">
+                <h2 class="form-title">Contact us</h2>
+
+                <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
+                    <input type="hidden" name="access_key" value="ae65fd58-3599-451f-bdd9-0c62951b2176">
+                    <input type="hidden" name="redirect" value="https://web3forms.com/success">
+
+                    <input type="text" name="name" placeholder="Name" required>
+
+                    <input type="email" name="email" placeholder="Email" required>
+
+                    <textarea name="message" placeholder="Message" rows="6" required></textarea>
+
+                    <button type="submit" class="form-submit-btn">Send message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-header">
+            <p class="footer-subtitle">INTERESTED IN LEARNING MORE?</p>
+            <h2 class="footer-title">Connect with us <span class="arrow">↗</span></h2>
+        </div>
+
+        <div class="footer-content">
+            <div class="footer-left">
+                <img src="{% static 'assects/icons/satyamatrix.svg' %}" alt="SatyaMatrix" class="footer-logo">
+                <div class="footer-company">
+                    <p>THE SATYAMATRIX</p>
+                    <p>is the project Developed for Mumbai Hacks 2025</p>
+                    <p>by Team "404 Found us"</p>
+                </div>
+            </div>
+
+            <div class="footer-middle">
+                <h3>Contact</h3>
+                <ul class="footer-links">
+                    <li><a href="mailto:info@satyamatrix.com">utsavsingh3529@gmail.com <span>→</span></a></li>
+                    <li><a href="tel:+18005554302">+91 9619290827 <span>→</span></a></li>
+                    <li><a href="https://github.com/Utsav-Singh-35/MumbaiHacks.git" target="_blank">Github
+                            <span>→</span></a></li>
+                </ul>
+            </div>
+
+            <div class="footer-right">
+                <h3>Stay in touch</h3>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email" required>
+                    <button type="submit">→</button>
+                </form>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>

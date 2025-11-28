@@ -1,0 +1,330 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - SatyaMatrix</title>
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+</head>
+
+<body>
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button class="menu-btn" id="menuToggle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <span class="sidebar-title">Menu</span>
+        </div>
+        
+        <div class="sidebar-top">
+            <button class="sidebar-item" id="newChatBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"></path>
+                </svg>
+                <span class="sidebar-text">New Chat</span>
+            </button>
+            
+            <button class="sidebar-item active" id="currentChatBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span class="sidebar-text">Current Chat</span>
+            </button>
+            
+            <button class="sidebar-item" id="historyBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="sidebar-text">History</span>
+            </button>
+            
+
+            
+            <a href="/auth/trending/" class="sidebar-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                </svg>
+                <span class="sidebar-text">Trending</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-bottom">
+            <button class="sidebar-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                </svg>
+                <span class="sidebar-text">Settings</span>
+            </button>
+            
+            <a href="{% url 'profile' %}" class="sidebar-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span class="sidebar-text">Profile</span>
+            </a>
+            
+            <button class="sidebar-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <span class="sidebar-text">About</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Background Video -->
+        <div class="video-background">
+            <video autoplay muted loop playsinline id="bgVideo">
+                <source src="{% static 'assects/videos/Aurora.mp4' %}" type="video/mp4">
+            </video>
+        </div>
+
+        <!-- User Dropdown (Top Right) -->
+        <div class="user-dropdown">
+            <button class="user-btn" id="userBtn">
+                <div class="user-avatar-small">{{ user.name|slice:":2"|upper }}</div>
+                <span>{{ user.name }}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="{% url 'profile' %}" class="dropdown-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Profile
+                </a>
+                <a href="#" class="dropdown-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                    </svg>
+                    Settings
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="{% url 'logout' %}" class="dropdown-item logout">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area" id="chatArea">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="orb-background"></div>
+                
+                <!-- Logo in top left -->
+                <div class="welcome-logo">
+                    <img src="{% static 'assects/icons/satyamatrix.svg' %}" alt="SatyaMatrix">
+                </div>
+                <div class="welcome-text">
+                    <h1>Hey! {{ user.name|title }}</h1>
+                    <h2>What can I help with?</h2>
+                </div>
+
+                <div class="suggestion-cards">
+                    <button class="suggestion-card" data-prompt="Help me create a Presentation">
+                        <div class="card-title">Content Help</div>
+                        <div class="card-desc">Help with me create a Presentation</div>
+                    </button>
+                    <button class="suggestion-card" data-prompt="Help me with Ideas">
+                        <div class="card-title">Suggestions</div>
+                        <div class="card-desc">Help with me Ideas</div>
+                    </button>
+                    <button class="suggestion-card" data-prompt="Help me apply for job application">
+                        <div class="card-title">Job Application</div>
+                        <div class="card-desc">Help with me apply for job application</div>
+                    </button>
+                </div>
+                <div class="input-container">
+                    <form class="input-box" id="chatForm">
+                        <div class="top-row">
+                            <img src="{% static 'assects/images/star.png' %}" alt="star" class="input-icon">
+                            <input type="text" placeholder="Ask me anything......" id="messageInput" autocomplete="off">
+                        </div>
+                        <div class="bottom-row">
+                            <div class="attach-section">
+                                <label for="fileInput" class="attach-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path
+                                            d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48">
+                                        </path>
+                                    </svg>
+                                    <span>Attach file</span>
+                                </label>
+                                <input type="file" id="fileInput"
+                                    accept="image/*,video/*,.pdf,.doc,.docx,.txt,.csv,.xls,.xlsx,.ppt,.pptx"
+                                    style="display: none;" multiple>
+                                <span id="fileNames" class="file-names"></span>
+                            </div>
+                            <button type="submit" class="send-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Messages Area -->
+            <div class="messages-area" id="messagesArea" style="display: none;">
+                <div class="chat-header">
+                    <h3 class="chat-name">New Chat</h3>
+                </div>
+                <div class="messages-container" id="messagesContainer"></div>
+                
+                <!-- Input Box for Chat Mode -->
+                <div class="chat-input-wrapper">
+                    <form class="chat-input-box" id="chatFormActive">
+                        <div class="chat-input-row">
+                            <input 
+                                type="text" 
+                                placeholder="Type your message..." 
+                                id="messageInputActive" 
+                                autocomplete="off"
+                                class="chat-input-field"
+                            >
+                            <button type="button" class="chat-attach-btn" id="chatAttachBtn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                                </svg>
+                            </button>
+                            <input 
+                                type="file" 
+                                id="fileInputActive" 
+                                accept="image/*,video/*,.pdf,.doc,.docx,.txt,.csv,.xls,.xlsx,.ppt,.pptx"
+                                style="display: none;"
+                                multiple
+                            >
+                            <button type="submit" class="chat-send-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="chat-file-names" id="chatFileNames"></div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- History View (Full Screen) -->
+            <div class="history-view" id="historyView" style="display: none;">
+                <div class="history-view-header">
+                    <h2>Chat History</h2>
+                </div>
+                
+                <div class="history-search-bar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" id="historySearchInput" placeholder="Search conversations..." autocomplete="off">
+                </div>
+                
+                <div class="history-table-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Sr No.</th>
+                                <th>Chat Name</th>
+                                <th>Messages</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <tr>
+                                <td colspan="5" class="loading-row">Loading conversations...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Edit Chat Name Modal -->
+    <div class="modal" id="editChatModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Chat Name</h3>
+                <button class="modal-close" id="closeEditModal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="editChatNameInput" placeholder="Enter new chat name" autocomplete="off">
+                <input type="hidden" id="editChatId">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelEditBtn">Cancel</button>
+                <button class="btn-primary" id="saveEditBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/chat.js' %}"></script>
+    <script>
+        // Email notifications are now handled server-side via Brevo
+        const originalChatHandler = window.handleChatResponse || function() {};
+        
+        window.handleChatResponse = async function(userMessage, botResponse) {
+            // Call original handler if it exists
+            if (typeof originalChatHandler === 'function') {
+                originalChatHandler(userMessage, botResponse);
+            }
+            
+            // Send email notification
+            try {
+                // Get current user info (adjust based on your user data structure)
+                const userName = '{{ user.name }}' || '{{ user.username }}';
+                const userEmail = '{{ user.email }}';
+                
+                // Option 1: Send to current user only
+                await window.sendChatbotResponseEmail(
+                    userMessage,
+                    botResponse,
+                    userName,
+                    userEmail
+                );
+                
+                // Option 2: Send to all users (uncomment if needed)
+                // const allUsers = await window.getAllUsers();
+                // await window.sendBulkChatbotEmails(userMessage, botResponse, allUsers);
+                
+                console.log('Email notification sent successfully');
+            } catch (error) {
+                console.error('Failed to send email notification:', error);
+            }
+        };
+    </script>
+</body>
+
+</html>

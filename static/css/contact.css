@@ -1,0 +1,432 @@
+/* Contact Section - Stellagent Style */
+.contact-section {
+    min-height: 100vh;
+    background: #000;
+    padding: 6rem 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.contact-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    width: 100%;
+}
+
+/* Left Side - Company Info */
+.contact-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.company-logo {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.company-logo img {
+    height: 50px;
+    width: auto;
+}
+
+.company-logo h2 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: #9b8fc7;
+    letter-spacing: 0.5px;
+}
+
+.company-details {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.detail-label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: capitalize;
+}
+
+.detail-value {
+    font-size: 1.05rem;
+    color: white;
+    line-height: 1.6;
+}
+
+/* Right Side - Contact Form */
+.contact-right {
+    display: flex;
+    flex-direction: column;
+    padding-top: 75px;
+}
+
+.form-title {
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 3rem;
+    color: white;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+    width: 100%;
+    padding: 1rem 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.contact-form select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='rgba(255,255,255,0.5)' d='M6 8L0 2h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right center;
+    padding-right: 30px;
+}
+
+.contact-form select option {
+    background: #1a1a1a;
+    color: white;
+}
+
+.contact-form textarea {
+    resize: vertical;
+    min-height: 100px;
+    padding-top: 1rem;
+}
+
+.form-submit-btn {
+    margin-top: 2rem;
+    padding: 1.2rem 3rem;
+    background: linear-gradient(135deg, #9b8fc7 0%, #7d6ba8 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.form-submit-btn:hover {
+    background: linear-gradient(135deg, #a89dd1 0%, #8a77b5 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(155, 143, 199, 0.3);
+}
+
+.form-submit-btn:active {
+    transform: translateY(0);
+}
+
+/* Grid Layout for Contact Left */
+.parent {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 8px;
+    min-height: 300px;
+    width: 100%;
+}
+
+.div1 {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.div2 {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.div3 {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.div4 {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Sesbania Font */
+@font-face {
+    font-family: 'Sesbania';
+    src: url('../assects/fonts/sesbania-font-1762946819-0/sesbania-regular_fontlotc6e7.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Sesbania';
+    src: url('../assects/fonts/sesbania-font-1762946819-0/sesbania-italic_fontlot91b4.otf') format('opentype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Apply Sesbania font to grid items */
+.parent div {
+    font-family: 'Sesbania', serif;
+    font-size: 4.5rem;
+    color: white;
+    padding: 40px;
+}
+
+/* GitHub Link Styling */
+.parent div {
+    position: relative;
+}
+
+.github-link {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    background: #000;
+    /* border: 2px solid grey; */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.github-link span {
+    color: white;
+    font-size: 2.2rem;
+    font-family: Arial, sans-serif;
+    position: relative;
+    top: -3px;
+}
+
+.github-link:hover {
+    background: #333;
+    transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .contact-section {
+        padding: 5rem 2rem;
+    }
+    
+    .contact-container {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+    }
+    
+    .contact-left {
+        gap: 2rem;
+    }
+    
+    .contact-right {
+        padding-top: 0;
+    }
+    
+    .company-logo h2 {
+        font-size: 2rem;
+    }
+    
+    .form-title {
+        font-size: 2rem;
+    }
+    
+    .parent {
+        gap: 10px;
+        min-height: 250px;
+    }
+    
+    .parent div {
+        font-size: 3rem !important;
+        padding: 25px !important;
+    }
+    
+    .github-link {
+        width: 35px;
+        height: 35px;
+        top: 8px;
+        right: 12px;
+    }
+    
+    .github-link span {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-section {
+        padding: 4rem 1.5rem;
+        min-height: auto;
+    }
+    
+    .company-logo img {
+        height: 45px;
+    }
+    
+    .company-logo h2 {
+        font-size: 1.6rem;
+    }
+    
+    .form-title {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+    
+    .contact-container {
+        gap: 3rem;
+    }
+    
+    .parent {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, auto);
+        gap: 12px;
+        min-height: auto;
+    }
+    
+    .parent div {
+        font-size: 2rem !important;
+        padding: 20px !important;
+        min-height: 100px;
+    }
+    
+    .github-link {
+        width: 30px;
+        height: 30px;
+        top: 8px;
+        right: 10px;
+    }
+    
+    .github-link span {
+        font-size: 1.5rem;
+        top: -2px;
+    }
+    
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+        font-size: 0.95rem;
+    }
+    
+    .form-submit-btn {
+        padding: 1rem 2rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-section {
+        padding: 3rem 1rem;
+    }
+    
+    .company-logo img {
+        height: 35px;
+    }
+    
+    .company-logo h2 {
+        font-size: 1.3rem;
+    }
+    
+    .form-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .contact-container {
+        gap: 2rem;
+    }
+    
+    .parent {
+        gap: 10px;
+    }
+    
+    .parent div {
+        font-size: 3rem !important;
+        padding: 15px !important;
+        min-height: 80px;
+    }
+    
+    .github-link {
+        width: 26px;
+        height: 26px;
+        top: 6px;
+        right: 8px;
+    }
+    
+    .github-link span {
+        font-size: 1.3rem;
+        top: -2px;
+    }
+    
+    .detail-value {
+        font-size: 0.9rem;
+    }
+    
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+        font-size: 0.9rem;
+        padding: 0.8rem 0;
+    }
+    
+    .form-submit-btn {
+        padding: 0.9rem 1.5rem;
+        font-size: 0.9rem;
+        margin-top: 1.5rem;
+    }
+}
