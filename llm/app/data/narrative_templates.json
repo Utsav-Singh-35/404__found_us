@@ -1,0 +1,69 @@
+{
+  "templates": [
+    {
+      "id": "fear_health",
+      "name": "Fear - Health Threat",
+      "description": "Claims that create fear about health risks",
+      "keywords": ["danger", "toxic", "poison", "deadly", "harmful", "risk", "disease", "illness", "death"],
+      "emotional_triggers": ["fear", "anxiety", "panic"],
+      "target_audience": "health-conscious individuals",
+      "examples": [
+        "X causes cancer",
+        "Y is poisoning our children",
+        "Z contains deadly chemicals"
+      ]
+    },
+    {
+      "id": "conspiracy_control",
+      "name": "Conspiracy - Control/Surveillance",
+      "description": "Claims about hidden control or surveillance",
+      "keywords": ["tracking", "control", "surveillance", "secret", "hidden agenda", "conspiracy", "microchip", "spying"],
+      "emotional_triggers": ["distrust", "paranoia", "anger"],
+      "target_audience": "anti-establishment individuals",
+      "examples": [
+        "Government is tracking us",
+        "Big Tech controls everything",
+        "Secret plan to control population"
+      ]
+    },
+    {
+      "id": "blame_scapegoat",
+      "name": "Blame - Scapegoating",
+      "description": "Claims that blame specific groups",
+      "keywords": ["fault", "blame", "responsible", "caused by", "because of", "their fault"],
+      "emotional_triggers": ["anger", "resentment", "frustration"],
+      "target_audience": "frustrated individuals seeking explanations",
+      "examples": [
+        "X group is responsible for Y problem",
+        "They are taking our jobs",
+        "It's their fault"
+      ]
+    },
+    {
+      "id": "hope_miracle",
+      "name": "Hope - Miracle Solution",
+      "description": "Claims offering too-good-to-be-true solutions",
+      "keywords": ["cure", "miracle", "secret", "breakthrough", "amazing", "revolutionary", "instant"],
+      "emotional_triggers": ["hope", "desperation", "optimism"],
+      "target_audience": "people seeking solutions",
+      "examples": [
+        "This one trick cures everything",
+        "Secret cure doctors don't want you to know",
+        "Miracle breakthrough"
+      ]
+    },
+    {
+      "id": "political_partisan",
+      "name": "Political - Partisan Attack",
+      "description": "Claims attacking political opponents",
+      "keywords": ["corrupt", "liar", "scandal", "exposed", "truth", "fraud", "rigged"],
+      "emotional_triggers": ["anger", "righteousness", "tribal loyalty"],
+      "target_audience": "politically engaged individuals",
+      "examples": [
+        "Politician X is corrupt",
+        "Party Y is destroying country",
+        "Hidden scandal exposed"
+      ]
+    }
+  ]
+}
