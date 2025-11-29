@@ -10,6 +10,7 @@ from app.database import (
     fact_checks_collection, evidence_collection,
     summaries_collection, reports_collection
 )
+from app.agents.intent import intent_agent, generate_chat_response
 from app.agents.classify import classify_agent
 from app.agents.extract import extraction_agent
 from app.agents.format import format_agent
@@ -58,6 +59,52 @@ async def process_submission_async(submission_id: str):
             {"_id": ObjectId(submission_id)},
             {"$set": {"status": "processing"}}
         )
+        
+        # ============================================================
+        # AGENT 0: INTENT CLASSIFICATION
+        # ============================================================
+        print("🔍 Agent 0: Intent Classification")
+        print("-" * 60)
+        
+        # Get the input text
+        input_text = submission.get('input_ref', '')
+        
+        # Classify intent
+        intent_result = intent_agent(input_text)
+        
+        print(f"✓ Intent: {intent_result['intent']}")
+        print(f"✓ Confidence: {intent_result['confidence']:.2%}")
+        print(f"✓ Reason: {intent_result['reason']}")
+        print()
+        
+        # If it's a chat message, generate response and return early
+        if intent_result['intent'] == 'chat':
+            chat_response = generate_chat_response(input_text)
+            
+            # Update submission as completed with chat response
+            submissions_collection.update_one(
+                {"_id": ObjectId(submission_id)},
+                {
+                    "$set": {
+                        "status": "completed",
+                        "intent": "chat",
+                        "chat_response": chat_response,
+                        "completed_at": datetime.utcnow()
+                    }
+                }
+            )
+            
+            print(f"💬 Chat response generated")
+            print(f"{'='*60}\n")
+            
+            return {
+                "success": True,
+                "intent": "chat",
+                "response": chat_response
+            }
+        
+        # Continue with fact-checking for 'fact_check' intent
+        print("✅ Proceeding with fact-check pipeline\n")
         
         # ============================================================
         # AGENT 1: CLASSIFY

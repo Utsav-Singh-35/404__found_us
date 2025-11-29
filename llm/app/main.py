@@ -5,8 +5,6 @@ from typing import Optional
 from datetime import datetime
 from bson import ObjectId
 import uuid
-import redis
-from rq import Queue
 
 from app.config import settings
 from app.database import (
@@ -16,15 +14,9 @@ from app.database import (
 from app.storage import storage
 from app.models import SubmissionResponse, ResultResponse
 
-# Initialize Redis and task queue
-try:
-    redis_conn = redis.from_url(settings.redis_url)
-    task_queue = Queue('default', connection=redis_conn)
-    print("✅ Redis connection established")
-except Exception as e:
-    print(f"⚠️  Redis connection failed: {e}")
-    print("⚠️  Background processing will not work")
-    task_queue = None
+# Initialize Redis and task queue (DISABLED for now)
+task_queue = None
+print("⚠️  Redis/Queue disabled - using synchronous processing")
 
 # Create FastAPI app
 app = FastAPI(
@@ -42,6 +34,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -139,19 +133,24 @@ async def check_claim(
     result = await async_submissions.insert_one(submission)
     submission_id = str(result.inserted_id)
     
-    # Enqueue processing job (Phase 2)
-    if task_queue:
-        from app.orchestrator import process_submission
-        job = task_queue.enqueue(
-            process_submission,
-            submission_id,
-            job_timeout=-1  # No timeout for Windows compatibility
+    # Process synchronously (Redis disabled)
+    print(f"📝 New submission created: {submission_id} (type: {input_type})")
+    print(f"🔄 Processing synchronously...")
+    
+    # Import and run processor directly
+    try:
+        from app.orchestrator import process_submission_async
+        import asyncio
+        
+        # Run in background task
+        asyncio.create_task(process_submission_async(submission_id))
+        print(f"✅ Processing started for {submission_id}")
+    except Exception as e:
+        print(f"⚠️  Failed to start processing: {e}")
+        await async_submissions.update_one(
+            {"_id": ObjectId(submission_id)},
+            {"$set": {"status": "error", "error_message": str(e)}}
         )
-        print(f"📝 New submission created: {submission_id} (type: {input_type})")
-        print(f"✓ Job enqueued: {job.id}")
-    else:
-        print(f"📝 New submission created: {submission_id} (type: {input_type})")
-        print(f"⚠️  Redis not available - job not enqueued")
     
     return SubmissionResponse(
         submission_id=submission_id,
@@ -184,6 +183,13 @@ async def get_result(submission_id: str):
         return ResultResponse(
             status='error',
             explanation=submission.get('error_message', 'Unknown error')
+        )
+    
+    # If it was a chat message (not a fact-check)
+    if submission.get('intent') == 'chat':
+        return ResultResponse(
+            status='completed',
+            explanation=submission.get('chat_response', 'Chat response generated')
         )
     
     # Get claim
