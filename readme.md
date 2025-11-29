@@ -26,46 +26,106 @@ SatyaMatrix is a next-generation fact-checking platform that leverages advanced 
 
 ## ✨ Features
 
-### 🤖 **Intelligent AI Agents**
+### 🤖 **9-Agent Intelligence System**
 
 <table>
 <tr>
-<td width="50%">
+<td width="33%">
 
 #### **Agent 0: Intent Classifier**
-- Distinguishes fact-check requests from general chat
-- Confidence-based routing system
+- Distinguishes fact-check from chat
+- Confidence-based routing
 - Natural language understanding
+- OpenRouter API integration
 
 </td>
-<td width="50%">
+<td width="33%">
 
-#### **Agent 1: Fact Checker**
-- Multi-source verification
-- Confidence scoring (🟢🟡🔴)
-- Evidence-based analysis
+#### **Agent 1: Classify**
+- Input type detection
+- Media format identification
+- Metadata extraction
+- Content categorization
+
+</td>
+<td width="33%">
+
+#### **Agent 2: Extract**
+- Claim extraction from text
+- OCR for images
+- Multi-format parsing
+- Fallback mechanisms
 
 </td>
 </tr>
 <tr>
-<td width="50%">
+<td width="33%">
 
-#### **Agent 2: Web Researcher**
+#### **Agent 3: Format & Normalize**
+- Claim standardization
+- Entity recognition (NER)
+- Date normalization
+- Context preservation
+
+</td>
+<td width="33%">
+
+#### **Agent 4: Fact-Check APIs**
+- Multi-source verification
+- Authoritative fact-checkers
+- API aggregation
+- Cross-reference validation
+
+</td>
+<td width="33%">
+
+#### **Agent 5: Identify**
+- Verification status detection
+- Confidence calculation
+- Source prioritization
+- Decision routing
+
+</td>
+</tr>
+<tr>
+<td width="33%">
+
+#### **Agent 6: Web Search**
 - Real-time web scraping
-- Source credibility assessment
+- Evidence collection
+- Source reliability scoring
 - Citation management
 
 </td>
-<td width="50%">
+<td width="33%">
 
-#### **Agent 3: Report Generator**
-- Structured fact-check reports
-- Visual confidence indicators
-- Downloadable reports
+#### **Agent 7: Summarize**
+- LLM-powered analysis
+- Hallucination detection
+- Confidence aggregation
+- Explanation generation
+
+</td>
+<td width="33%">
+
+#### **Agent 8: Report Generator**
+- PDF report creation
+- Visual formatting
+- Source citations
+- Downloadable output
 
 </td>
 </tr>
 </table>
+
+#### **Advanced Agent Modules**
+
+Beyond the core 9 agents, SatyaMatrix includes specialized modules:
+
+- **CMTE (Cross-Media Truth Evaluation)**: Multi-modal fact-checking across text, images, and videos
+- **CRG (Credibility Reputation Graph)**: Source trust scoring and network analysis
+- **NRI (Narrative Risk Intelligence)**: Misinformation pattern detection and risk assessment
+- **RTR (Real-Time Reporting)**: Live event monitoring and fact-check streaming
 
 ---
 
@@ -200,29 +260,46 @@ graph TB
 
 ## 🔑 Key Components
 
-### 1️⃣ **Multi-Agent System**
+### 1️⃣ **9-Agent Pipeline**
 
-The heart of SatyaMatrix is its intelligent agent orchestration:
+The heart of SatyaMatrix is its sophisticated agent orchestration:
 
 ```python
 Agent 0 (Intent) → Classifies user input
     ↓
     ├─→ Chat Mode → OpenRouter API → Conversational response
     │
-    └─→ Fact-Check Mode → Agent 1 → Verification pipeline
-                              ↓
-                         Agent 2 → Web research
-                              ↓
-                         Agent 3 → Report generation
+    └─→ Fact-Check Mode
+            ↓
+        Agent 1 (Classify) → Input type detection
+            ↓
+        Agent 2 (Extract) → Claim extraction
+            ↓
+        Agent 3 (Format) → Normalization & NER
+            ↓
+        Agent 4 (Fact-Check APIs) → Authoritative sources
+            ↓
+        Agent 5 (Identify) → Verification status
+            ↓
+        Agent 6 (Web Search) → Evidence collection
+            ↓
+        Agent 7 (Summarize) → LLM analysis
+            ↓
+        Agent 8 (Report) → PDF generation
 ```
 
-### 2️⃣ **Fact-Check Pipeline**
+### 2️⃣ **Complete Fact-Check Pipeline**
 
 ```
-User Query → Intent Detection → Source Research → 
-Verification → Confidence Scoring → Report Generation → 
-Email Notification → Trending News
+User Query → Agent 0 (Intent) → Agent 1 (Classify) → 
+Agent 2 (Extract) → Agent 3 (Format) → Agent 4 (Fact-Check APIs) → 
+Agent 5 (Identify) → Agent 6 (Web Search) → Agent 7 (Summarize) → 
+Agent 8 (Report) → Email Notification → Trending News
 ```
+
+**Processing Time**: ~30-60 seconds for complete verification
+**Accuracy**: Multi-source validation with confidence scoring
+**Output**: Comprehensive PDF report with citations
 
 ### 3️⃣ **Trending News System**
 
@@ -276,9 +353,18 @@ Email Notification → Trending News
 │   ├── app/
 │   │   ├── agents/              # AI Agent implementations
 │   │   │   ├── intent.py        # Agent 0: Intent classification
-│   │   │   ├── fact_check.py    # Agent 1: Fact verification
-│   │   │   ├── research.py      # Agent 2: Web research
-│   │   │   └── report.py        # Agent 3: Report generation
+│   │   │   ├── classify.py      # Agent 1: Input classification
+│   │   │   ├── extract.py       # Agent 2: Claim extraction
+│   │   │   ├── format.py        # Agent 3: Format & normalize
+│   │   │   ├── factcheck.py     # Agent 4: Fact-check APIs
+│   │   │   ├── identify.py      # Agent 5: Identify status
+│   │   │   ├── search.py        # Agent 6: Web search
+│   │   │   ├── summarize.py     # Agent 7: LLM summarization
+│   │   │   ├── report.py        # Agent 8: Report generation
+│   │   │   ├── cmte*.py         # CMTE module (cross-media)
+│   │   │   ├── crg*.py          # CRG module (credibility)
+│   │   │   ├── nri*.py          # NRI module (narrative risk)
+│   │   │   └── rtr*.py          # RTR module (real-time)
 │   │   ├── main.py              # FastAPI application
 │   │   └── orchestrator.py      # Agent coordination
 │   └── start.py                 # Service launcher
@@ -333,16 +419,23 @@ User: "Is the Earth flat?"
   ↓
 Agent 0: Detects fact-check intent (95% confidence)
   ↓
-Agent 1: Verifies claim → FALSE
+Agent 1: Classifies as text input
   ↓
-Agent 2: Gathers scientific evidence
+Agent 2: Extracts claim: "The Earth is flat"
   ↓
-Agent 3: Generates report with sources
+Agent 3: Normalizes and identifies entities
   ↓
-Bot: 🔴 Fact-Check Result (Confidence: 98%)
-     The claim is FALSE. [Full explanation with sources]
-     [Publish] [Download]
-```
+Agent 4: Checks authoritative fact-checkers
+  ↓
+Agent 5: Identifies as debunked claim
+  ↓
+Agent 6: Collects scientific evidence
+  ↓
+Agent 7: Generates LLM summary with confidence
+  ↓
+Agent 8: Creates PDF report
+  ↓
+Bot: 🔴 Fact-Chec
 
 ---
 
