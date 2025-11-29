@@ -26,12 +26,13 @@ def intent_agent(text: str) -> Dict[str, Any]:
     # Fact-check indicators
     fact_check_keywords = [
         'is it true', 'fact check', 'verify', 'real or fake',
-        'is this real', 'did this happen', 'confirm',
+        'is this real', 'did this happen', 'confirm', 'has',
         'breaking news', 'according to', 'reports say',
-        'allegedly', 'claims that', 'announced',
-        'bank holiday', 'government', 'official',
-        'study shows', 'research', 'scientists',
-        'covid', 'vaccine', 'election', 'politics'
+        'allegedly', 'claims that', 'announced', 'cancelled', 'canceled',
+        'bank holiday', 'government', 'official', 'launch', 'satellite',
+        'study shows', 'research', 'scientists', 'mumbai', 'india',
+        'covid', 'vaccine', 'election', 'politics', 'earth is',
+        'gets', 'will', 'to launch', 'hackathon', 'event'
     ]
     
     # Chat indicators
@@ -109,7 +110,7 @@ def intent_agent(text: str) -> Dict[str, Any]:
         }
     
     # Decision logic
-    if fact_check_score >= 1.5:
+    if fact_check_score >= 1.0:  # Lowered threshold from 1.5 to 1.0
         confidence = min(0.95, 0.6 + (fact_check_score * 0.1))
         reason = f"Detected fact-check indicators (score: {fact_check_score:.1f})"
         if matched_keywords:
@@ -128,6 +129,14 @@ def intent_agent(text: str) -> Dict[str, Any]:
             'reason': 'Question format with sufficient context'
         }
     
+    # If it has dates or entities and reasonable length, likely fact-check
+    if (has_date or entity_count > 0) and word_count >= 4:
+        return {
+            'intent': 'fact_check',
+            'confidence': 0.75,
+            'reason': 'Contains factual elements (dates/entities)'
+        }
+    
     # Default to chat for ambiguous cases
     return {
         'intent': 'chat',
@@ -136,9 +145,9 @@ def intent_agent(text: str) -> Dict[str, Any]:
     }
 
 
-def generate_chat_response(text: str) -> str:
+async def generate_chat_response(text: str) -> str:
     """
-    Generate a friendly chat response for non-fact-check queries
+    Generate a friendly chat response using OpenRouter API
     
     Args:
         text: User input
@@ -146,36 +155,70 @@ def generate_chat_response(text: str) -> str:
     Returns:
         Chat response string
     """
+    import os
+    import aiohttp
     
+    # Get API key from environment
+    api_key = os.getenv('OPENROUTER_API_KEY', '')
+    
+    if not api_key:
+        # Fallback to simple responses if no API key
+        return _generate_simple_response(text)
+    
+    # System prompt for chat mode
+    system_prompt = """You are SatyaMatrix, a friendly AI fact-checking assistant. 
+You help users verify claims and check information. When users greet you or ask general questions, 
+respond warmly and guide them on how to use your fact-checking capabilities. 
+Keep responses concise (2-3 sentences) and friendly."""
+    
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                'https://openrouter.ai/api/v1/chat/completions',
+                headers={
+                    'Authorization': f'Bearer {api_key}',
+                    'Content-Type': 'application/json',
+                    'HTTP-Referer': os.getenv('OPENROUTER_SITE_URL', 'http://localhost:8000'),
+                    'X-Title': os.getenv('OPENROUTER_SITE_NAME', 'SatyaMatrix')
+                },
+                json={
+                    'model': os.getenv('OPENROUTER_MODEL', 'openai/gpt-4o-mini:free'),
+                    'messages': [
+                        {'role': 'system', 'content': system_prompt},
+                        {'role': 'user', 'content': text}
+                    ],
+                    'max_tokens': 150,
+                    'temperature': 0.7
+                },
+                timeout=aiohttp.ClientTimeout(total=10)
+            ) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    return data['choices'][0]['message']['content'].strip()
+                else:
+                    return _generate_simple_response(text)
+    except Exception as e:
+        print(f"⚠️  OpenRouter API error: {e}")
+        return _generate_simple_response(text)
+
+
+def _generate_simple_response(text: str) -> str:
+    """Fallback simple responses when API is unavailable"""
     text_lower = text.lower().strip()
     
-    # Greetings
     if any(word in text_lower for word in ['hello', 'hi', 'hey']):
         return ("Hello! 👋 I'm SatyaMatrix, your AI fact-checking assistant. "
-                "I can help you verify claims, check news articles, and analyze information. "
+                "Share any claim you'd like me to verify!")
+    
+    if any(word in text_lower for word in ['help', 'what can you', 'how do you']):
+        return ("I can verify factual claims, check news articles, and analyze information. "
                 "Just share a claim or statement you'd like me to fact-check!")
     
-    # Help/capabilities
-    if any(word in text_lower for word in ['help', 'what can you', 'how do you']):
-        return ("I can help you fact-check claims! Here's what I can do:\n\n"
-                "✅ Verify factual claims and statements\n"
-                "✅ Check news articles and social media posts\n"
-                "✅ Analyze images for misinformation\n"
-                "✅ Search for credible sources\n"
-                "✅ Generate detailed fact-check reports\n\n"
-                "Just share any claim or statement you'd like me to verify!")
-    
-    # Thank you
     if 'thank' in text_lower:
         return "You're welcome! Feel free to ask me to fact-check anything. 😊"
     
-    # Who are you
     if any(phrase in text_lower for phrase in ['who are you', 'what are you', 'your name']):
         return ("I'm SatyaMatrix, an AI-powered fact-checking system. "
-                "I use multiple verification agents to analyze claims and provide accurate information. "
                 "Share any claim you'd like me to verify!")
     
-    # Default response
-    return ("I'm here to help you fact-check claims! If you have a statement, news article, "
-            "or claim you'd like me to verify, just share it with me. "
-            "For example: 'Is it true that...?' or 'Verify: [claim]'")
+    return ("I'm here to help you fact-check claims! Share any statement you'd like me to verify.")

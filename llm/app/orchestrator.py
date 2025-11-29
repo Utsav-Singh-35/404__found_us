@@ -79,7 +79,7 @@ async def process_submission_async(submission_id: str):
         
         # If it's a chat message, generate response and return early
         if intent_result['intent'] == 'chat':
-            chat_response = generate_chat_response(input_text)
+            chat_response = await generate_chat_response(input_text)
             
             # Update submission as completed with chat response
             submissions_collection.update_one(

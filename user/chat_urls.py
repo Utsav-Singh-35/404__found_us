@@ -17,4 +17,5 @@ urlpatterns = [
     path('api/<str:conversation_id>/messages/send/', chat_views.send_message, name='send_message'),
     path('api/<str:conversation_id>/history/', chat_views.get_conversation_history, name='get_conversation_history'),
     path('api/messages/<str:message_id>/delete/', chat_views.delete_message, name='delete_message'),
+    path('api/messages/<str:message_id>/publish/', chat_views.publish_fact_check, name='publish_fact_check'),
 ]

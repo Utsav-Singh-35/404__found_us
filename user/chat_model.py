@@ -275,19 +275,20 @@ class ChatMessage:
         return result.deleted_count > 0
     
     @staticmethod
-    def update_message(message_id, content):
-        """Update message content (text only)"""
+    def update_message(message_id, content=None, metadata=None):
+        """Update message content or metadata"""
         if not mongodb.is_connected():
             return False
         
+        update_data = {'updated_at': datetime.utcnow()}
+        if content is not None:
+            update_data['content'] = content
+        if metadata is not None:
+            update_data['metadata'] = metadata
+        
         result = mongodb.db.chat_messages.update_one(
             {'_id': ObjectId(message_id)},
-            {
-                '$set': {
-                    'content': content,
-                    'updated_at': datetime.utcnow()
-                }
-            }
+            {'$set': update_data}
         )
         return result.modified_count > 0
     

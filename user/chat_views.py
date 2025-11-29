@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .chat_model import ChatMessage, Conversation
 import json
+from datetime import datetime
 
 @login_required
 def chat_view(request, conversation_id=None):
@@ -306,7 +307,6 @@ def send_message(request, conversation_id):
         
         # Generate and save bot response
         if message_text:
-            # TODO: Replace this with actual AI integration (OpenAI, etc.)
             bot_response_text = generate_bot_response(message_text)
             
             # Save bot response to MongoDB
@@ -327,22 +327,7 @@ def send_message(request, conversation_id):
                     'created_at': bot_message['created_at'].isoformat()
                 })
                 
-                # Send email notification to all users
-                try:
-                    from .email_utils import send_chatbot_response_email
-                    
-                    # Extract title from the query (first 50 chars)
-                    email_title = f"Fact-Check: {message_text[:50]}{'...' if len(message_text) > 50 else ''}"
-                    
-                    send_chatbot_response_email(
-                        chat_message=message_text,
-                        response_text=bot_response_text,
-                        title=email_title,
-                        author="SatyaMatrix AI",
-                        description="A new fact-check response has been generated for your query. Check the details below."
-                    )
-                except Exception as email_error:
-                    print(f"⚠️  Email notification failed: {email_error}")
+                # Note: Email sending removed - now done via publish button
         
         return JsonResponse({
             'success': True,
@@ -411,10 +396,17 @@ def generate_bot_response(user_message):
                 print(f"📊 Status: {status}")
                 
                 if status == 'completed':
-                    # Format response for chat
-                    confidence = result_data.get('confidence', 0)
+                    # Get response data
+                    confidence = result_data.get('confidence')
                     explanation = result_data.get('explanation', 'No explanation available.')
                     
+                    # Check if this is a chat response (no confidence score)
+                    if confidence is None:
+                        # This is a chat response, return it directly
+                        print(f"✅ Chat response received!")
+                        return explanation
+                    
+                    # This is a fact-check result
                     confidence_pct = int(confidence * 100)
                     
                     # Determine confidence level emoji
@@ -526,6 +518,96 @@ def delete_message(request, message_id):
     except Exception as e:
         return JsonResponse({
             'error': str(e)
+        }, status=500)
+
+@login_required
+@csrf_exempt
+def publish_fact_check(request, message_id):
+    """Publish and email a fact-check report"""
+    print(f"\n📤 publish_fact_check called!")
+    print(f"   Message ID: {message_id}")
+    print(f"   Method: {request.method}")
+    print(f"   User: {request.user.id}")
+    
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+    try:
+        from .chat_model import ChatMessage
+        from .email_utils import send_chatbot_response_email
+        from .trending_model import TrendingNews
+        
+        user_id = request.user.id
+        print(f"   User ID: {user_id}")
+        
+        # Get the bot message
+        message = ChatMessage.get_message_by_id(message_id)
+        
+        if not message:
+            return JsonResponse({'error': 'Message not found'}, status=404)
+        
+        # Verify the message belongs to user's conversation
+        from .chat_model import Conversation
+        conversation = Conversation.get_conversation_by_id(str(message['conversation_id']))
+        
+        if not conversation or conversation['user_id'] != str(user_id):
+            return JsonResponse({'error': 'Unauthorized'}, status=403)
+        
+        # Only allow publishing bot messages (fact-check results)
+        if message['sender'] != 'bot':
+            return JsonResponse({'error': 'Can only publish bot responses'}, status=400)
+        
+        # Get the user's original query (previous message)
+        user_message = None
+        messages = ChatMessage.get_conversation_messages(str(message['conversation_id']), limit=100)
+        for i, msg in enumerate(messages):
+            if str(msg['_id']) == message_id and i > 0:
+                user_message = messages[i - 1]
+                break
+        
+        user_query = user_message.get('content', 'Fact-check query') if user_message else 'Fact-check query'
+        
+        # Send email
+        email_title = f"Fact-Check: {user_query[:50]}{'...' if len(user_query) > 50 else ''}"
+        
+        send_chatbot_response_email(
+            chat_message=user_query,
+            response_text=message['content'],
+            title=email_title,
+            author="SatyaMatrix AI",
+            description="A fact-check report has been published and shared."
+        )
+        
+        # Mark message as published
+        existing_metadata = message.get('metadata', {})
+        existing_metadata['published'] = True
+        existing_metadata['published_at'] = datetime.utcnow().isoformat()
+        ChatMessage.update_message(message_id, metadata=existing_metadata)
+        
+        # Create trending news from this fact-check
+        trending_news = TrendingNews.create_from_fact_check(
+            message_id=message_id,
+            user_query=user_query,
+            fact_check_result=message['content']
+        )
+        
+        if trending_news:
+            print(f"✅ Created trending news: {trending_news['_id']}")
+        else:
+            print(f"⚠️  Failed to create trending news")
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Fact-check report published and emailed successfully!',
+            'trending_news_id': str(trending_news['_id']) if trending_news else None
+        })
+        
+    except Exception as e:
+        print(f"Error publishing fact-check: {e}")
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({
+            'error': f'Failed to publish: {str(e)}'
         }, status=500)
 
 @login_required
